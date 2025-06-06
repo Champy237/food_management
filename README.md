@@ -1,113 +1,110 @@
-# food_management
-Projet Flask de Gestion Alimentaire
-Description
-Ce projet est une application backend développée avec Flask, SQLAlchemy et PostgreSQL.
-Elle permet de gérer des utilisateurs, des consommateurs, des nourritures, des ingrédients, ainsi que leurs relations comme les allergies et l'historique de consommation.
+# 🥗 Projet Flask - API de Gestion Alimentaire
 
-Fonctionnalités
-Gestion des utilisateurs (inscription, identification, etc.)
+Ce projet est une API RESTful développée avec Flask pour la gestion des utilisateurs, des consommateurs, des nourritures, des ingrédients, des allergies et de l’historique de consommation.
 
-Gestion des consommateurs liés aux utilisateurs
+## 🚀 Fonctionnalités
 
-Gestion des nourritures et catégories associées
+- Création et gestion des utilisateurs
+- Association d’un consommateur à un utilisateur
+- Création et consultation de nourritures et de leurs catégories
+- Définition des ingrédients pour chaque nourriture
+- Suivi des allergies d’un consommateur
+- Enregistrement de l’historique de consommation et détection de malaises
 
-Gestion des ingrédients pour chaque nourriture
+## 🛠️ Technologies
 
-Suivi des allergies des consommateurs
+- **Python 3.12**
+- **Flask**
+- **SQLAlchemy**
+- **PostgreSQL**
+- **psycopg2**
+- Architecture : `models/`, `repositories/`, `services/`, `routes/`
 
-Historique de consommation avec suivi des effets (malaise, etc.)
+## 🧱 Structure du Projet
 
-Technologies utilisées
-Python 3.12
+```
+.
+├── app/
+│   ├── models/
+│   ├── repositories/
+│   ├── services/
+│   ├── routes/
+│   └── __init__.py
+├── config.py
+├── run.py
+├── requirements.txt
+└── README.md
+```
 
-Flask (micro-framework web)
+## ⚙️ Installation
 
-SQLAlchemy (ORM pour la base de données)
+1. **Cloner le projet**
+```bash
+git clone <url_du_repo>
+cd <nom_du_projet>
+```
 
-PostgreSQL (base de données relationnelle)
-
-psycopg2 (connecteur PostgreSQL pour Python)
-
-Installation
-Cloner le dépôt :
-
-bash
-Copy
-Edit
-git clone <URL_DU_DEPOT>
-cd <NOM_DU_REPO>
-Créer un environnement virtuel Python et l’activer :
-
-bash
-Copy
-Edit
-python3 -m venv virtuel
+2. **Créer un environnement virtuel**
+```bash
+python -m venv virtuel
 source virtuel/bin/activate  # Linux/Mac
-# virtuel\Scripts\activate   # Windows
-Installer les dépendances :
+# virtuel\Scripts\activate  # Windows
+```
 
-bash
-Copy
-Edit
+3. **Installer les dépendances**
+```bash
 pip install -r requirements.txt
-Configurer la base de données PostgreSQL :
+```
 
-Créer la base db_food
+4. **Configurer PostgreSQL**
 
-Configurer les identifiants dans le fichier de configuration Flask (config.py ou .env)
+Créer la base de données PostgreSQL `db_food` :
 
-Exemple de configuration :
+```bash
+psql -U champy -c "CREATE DATABASE db_food;"
+```
 
-env
-Copy
-Edit
+Configurer `config.py` ou `.env` :
+
+```
 DATABASE_URL=postgresql://champy:AZERTY2005@localhost/db_food
-Initialiser la base de données (création des tables) :
+```
 
-bash
-Copy
-Edit
-flask db upgrade  # si tu utilises Flask-Migrate
-# ou exécuter un script d'initialisation
-Lancer l’application :
+5. **Lancer le projet**
+```bash
+python run.py
+```
 
-bash
-Copy
-Edit
-flask run
-Utilisation
-L’application expose des routes API REST (exemple: /utilisateurs, /consommateurs, /nourritures, etc.)
+## 🧪 Utilisation
 
-Tu peux utiliser Postman ou curl pour tester les endpoints.
+Tu peux utiliser Postman, curl ou Swagger pour interagir avec l’API :
 
-Un exemple d’insertion via shell Python avec SQLAlchemy est fourni dans le dossier /scripts.
+- `POST /utilisateurs` – Créer un utilisateur
+- `GET /nourritures` – Liste des nourritures
+- `POST /historique` – Ajouter une consommation
+- `GET /consommateur/<id>/allergies` – Allergies d’un consommateur
 
-Structure du projet
-bash
-Copy
-Edit
-/app
-  /models.py          # Modèles SQLAlchemy
-  /routes.py          # Routes Flask
-  /services.py        # Logique métier
-  /repository.py      # Accès aux données
-/config.py            # Configuration Flask et base de données
-/run.py               # Point d’entrée de l’application
-/requirements.txt     # Dépendances Python
-/README.md            # Ce fichier
-Contribuer
-Forker le projet
+## 📥 Peuplement de la base (exemple shell Python)
 
-Créer une branche (git checkout -b feature/ma-feature)
+```python
+from app.models.utilisateur import Utilisateur
+from app import db
 
-Commit tes modifications (git commit -m 'Ajout de ma feature')
+user = Utilisateur(nom="Ali", prenom="Khan", email="ali.khan@example.com", password="motdepasse")
+db.session.add(user)
+db.session.commit()
+```
 
-Push la branche (git push origin feature/ma-feature)
+## ✅ TODO
 
-Ouvrir une Pull Request
+- Ajouter l’authentification JWT
+- Ajouter Swagger UI ou Redoc pour la doc API
+- Ajouter des tests unitaires
 
-Licence
-Ce projet est sous licence MIT.
+## 📄 Licence
 
-Si tu veux, je peux aussi te générer un exemple de fichier requirements.txt ou un fichier .env exemple.
-Veux-tu ?
+Ce projet est sous licence MIT. Tu es libre de l’utiliser et de le modifier.
+
+---
+
+🎯 *Développé avec passion pour apprendre les architectures backend avec Flask et PostgreSQL.*
