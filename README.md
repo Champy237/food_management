@@ -1,110 +1,110 @@
-# 🥗 Projet Flask - API de Gestion Alimentaire
+# 🥗 Nutrition Manager API
 
-Ce projet est une API RESTful développée avec Flask pour la gestion des utilisateurs, des consommateurs, des nourritures, des ingrédients, des allergies et de l’historique de consommation.
+Une API RESTful développée avec **Flask** pour gérer des données nutritionnelles, des consommateurs, des ingrédients, des aliments et des historiques de consommation. Ce projet est destiné à des applications dans la **gestion de plans alimentaires**, **buffets**, ou **suivi nutritionnel intelligent**.
 
 ## 🚀 Fonctionnalités
 
-- Création et gestion des utilisateurs
-- Association d’un consommateur à un utilisateur
-- Création et consultation de nourritures et de leurs catégories
-- Définition des ingrédients pour chaque nourriture
-- Suivi des allergies d’un consommateur
-- Enregistrement de l’historique de consommation et détection de malaises
+* 🔐 Authentification et gestion des utilisateurs
+* 🢑 Gestion des consommateurs
+* 🍎 Gestion des aliments et catégories
+* 🠂 Ingrédients et composition des plats
+* 🗓️ Historique de consommation
+* 📦 Architecture modulaire (Model - Repository - Service - Route)
+* 🐳 Dockerisé pour un déploiement rapide
 
-## 🛠️ Technologies
-
-- **Python 3.12**
-- **Flask**
-- **SQLAlchemy**
-- **PostgreSQL**
-- **psycopg2**
-- Architecture : `models/`, `repositories/`, `services/`, `routes/`
-
-## 🧱 Structure du Projet
+## 🧱 Architecture
 
 ```
-.
-├── app/
-│   ├── models/
-│   ├── repositories/
-│   ├── services/
-│   ├── routes/
-│   └── __init__.py
-├── config.py
-├── run.py
-├── requirements.txt
-└── README.md
+app/
+├── models/         # Modèles SQLAlchemy
+├── repositories/   # Requêtes DB (CRUD)
+├── services/       # Logique métier
+├── routes/         # Endpoints Flask
+├── config/         # Configuration
+├── __init__.py     # Initialisation Flask
 ```
 
-## ⚙️ Installation
+## 🛠️ Installation locale
 
-1. **Cloner le projet**
+### 1. Cloner le dépôt
+
 ```bash
-git clone <url_du_repo>
-cd <nom_du_projet>
+git clone https://github.com/ton-utilisateur/nutrition-manager.git
+cd nutrition-manager
 ```
 
-2. **Créer un environnement virtuel**
-```bash
-python -m venv virtuel
-source virtuel/bin/activate  # Linux/Mac
-# virtuel\Scripts\activate  # Windows
-```
+### 2. Créer un environnement virtuel
 
-3. **Installer les dépendances**
 ```bash
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. **Configurer PostgreSQL**
+### 3. Configuration
 
-Créer la base de données PostgreSQL `db_food` :
+Modifier les variables d’environnement dans `.env` si nécessaire (notamment pour PostgreSQL) :
+
+```
+DATABASE_URL=postgresql://champy:AZERTY2005@localhost:5432/db_food
+```
+
+### 4. Lancer l'application
 
 ```bash
-psql -U champy -c "CREATE DATABASE db_food;"
+flask run
 ```
 
-Configurer `config.py` ou `.env` :
+## 🐳 Utilisation avec Docker
 
-```
-DATABASE_URL=postgresql://champy:AZERTY2005@localhost/db_food
-```
-
-5. **Lancer le projet**
 ```bash
-python run.py
+docker-compose up --build
 ```
 
-## 🧪 Utilisation
+## 📦 Technologies utilisées
 
-Tu peux utiliser Postman, curl ou Swagger pour interagir avec l’API :
+* Python 3.12
+* Flask
+* SQLAlchemy
+* PostgreSQL
+* Docker / Docker Compose
+* psycopg2
 
-- `POST /utilisateurs` – Créer un utilisateur
-- `GET /nourritures` – Liste des nourritures
-- `POST /historique` – Ajouter une consommation
-- `GET /consommateur/<id>/allergies` – Allergies d’un consommateur
+## 📄 API Endpoints
 
-## 📥 Peuplement de la base (exemple shell Python)
+| Ressource    | Méthode | Endpoint          | Description                      |
+| ------------ | ------- | ----------------- | -------------------------------- |
+| Utilisateur  | `POST`  | `/users/register` | Créer un utilisateur             |
+| Consommateur | `GET`   | `/consommateurs/` | Lister les consommateurs         |
+| Nourriture   | `POST`  | `/nourritures/`   | Ajouter une nourriture           |
+| Ingrédient   | `GET`   | `/ingredients/`   | Voir les ingrédients disponibles |
+| Historique   | `POST`  | `/historiques/`   | Enregistrer une consommation     |
 
-```python
-from app.models.utilisateur import Utilisateur
-from app import db
+## ✅ Exemple de requête
 
-user = Utilisateur(nom="Ali", prenom="Khan", email="ali.khan@example.com", password="motdepasse")
-db.session.add(user)
-db.session.commit()
+```bash
+curl -X POST http://localhost:5000/nourritures/ \
+  -H "Content-Type: application/json" \
+  -d '{"nom": "Riz", "categorie_id": 1}'
 ```
 
-## ✅ TODO
+## 🧪 Tests
 
-- Ajouter l’authentification JWT
-- Ajouter Swagger UI ou Redoc pour la doc API
-- Ajouter des tests unitaires
+```bash
+pytest
+```
 
-## 📄 Licence
+## 📜 Licence
 
-Ce projet est sous licence MIT. Tu es libre de l’utiliser et de le modifier.
+Ce projet est sous licence **MIT**. Voir le fichier [`LICENSE`](./LICENSE) pour plus d'informations.
 
 ---
 
-🎯 *Développé avec passion pour apprendre les architectures backend avec Flask et PostgreSQL.*
+© 2025 Champy. Tous droits réservés.
+
+---
+
+![Licence MIT](https://img.shields.io/badge/license-MIT-green.svg)
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![Flask](https://img.shields.io/badge/Flask-2.3-lightgrey)
+
