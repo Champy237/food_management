@@ -1,4 +1,3 @@
-
 from app import db
 from app.models import Consommateur, Nuriture, Ingredient, Categorie,HistoriqueConsommation
 from sqlalchemy import func
@@ -15,6 +14,9 @@ class UtilisateurRepository:
     def __init__(self):
         from app.models import Utilisateur
         self.model = Utilisateur
+
+    def list_utilisateurs(self): 
+        return self.model.query.all()
 
     def get_utilisateurs(self):
         return self.model.query.all()
@@ -56,6 +58,9 @@ class ConsommateurRepository:
         db.session.add(consommateur)
         db.session.commit()
         return consommateur
+    
+    def list_consommateurs(self):
+        return Consommateur.query.all()
 
     def get_consommateur_by_id(self, consommateur_id):
         return Consommateur.query.get(consommateur_id)
@@ -74,6 +79,8 @@ class ConsommateurRepository:
             db.session.delete(consommateur)
             db.session.commit()
         return consommateur
+
+
 
 class NuritureRepository:
     def create_nuriture(self, data, file=None):
@@ -105,6 +112,9 @@ class NuritureRepository:
         db.session.add(nuriture)
         db.session.commit()
         return nuriture
+    
+    def list_nuritures(self):
+        return Nuriture.query.all()
  
     def get_nuriture_by_id(self, nuriture_id):
         return Nuriture.query.get(nuriture_id)
@@ -140,12 +150,17 @@ class NuritureRepository:
             db.session.commit()
         return nuriture
 
+
+
 class IngredientRepository:
     def create_ingredient(self, data):
         ingredient = Ingredient(nom=data["nom"], description=data.get("description"))
         db.session.add(ingredient)
         db.session.commit()
         return ingredient
+
+    def list_ingredients(self):
+        return Ingredient.query.all()
 
     def get_ingredient_by_id(self, ingredient_id):
         return Ingredient.query.get(ingredient_id)
@@ -165,12 +180,17 @@ class IngredientRepository:
             db.session.commit()
         return ingredient
 
+
+
 class CategorieRepository:
     def create_categorie(self, data):
         categorie = Categorie(nom=data["nom"])
         db.session.add(categorie)
         db.session.commit()
         return categorie
+
+    def list_categories(self):
+        return Categorie.query.all()
 
     def get_categorie_by_id(self, categorie_id):
         return Categorie.query.get(categorie_id)
@@ -188,6 +208,8 @@ class CategorieRepository:
             db.session.delete(categorie)
             db.session.commit()
         return categorie
+
+
 
 class NuritureCategorieRepository:
     def create_nuriture_categorie(self, data):

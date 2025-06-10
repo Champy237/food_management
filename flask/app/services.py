@@ -1,3 +1,6 @@
+import os
+import requests
+from dotenv import load_dotenv
 
 from app.repositories import UtilisateurRepository
 from app.repositories import ConsommateurRepository
@@ -6,13 +9,17 @@ from app.repositories import IngredientRepository
 from app.repositories import NuritureCategorieRepository
 from app.repositories import HistoriqueConsommationRepository
 
+
 class UtilisateurService:
     def __init__(self):
         self.repository = UtilisateurRepository()
 
     def create_utilisateur(self, data):
         return self.repository.create_utilisateur(data)
-
+    
+    def list_utilisateurs(self):
+        return self.repository.list_utilisateurs
+    
     def get_utilisateurs(self):
         return self.repository.get_utilisateurs()
 
@@ -32,6 +39,13 @@ class ConsommateurService:
 
     def create_consommateur(self, data):
         return self.repository.create_consommateur(data)
+    
+
+    def get_all_consommateurs(self):
+        return self.repository.list_consommateurs()
+
+    def list_consommateurs(self):
+        return self.repository.list_consommateurs()
 
 
     def get_consommateur(self, id):
@@ -49,6 +63,7 @@ class NuritureService:
 
     def create_nuriture(self, data, file=None):
         return self.repository.create_nuriture(data, file=file)
+
 
     def get_nuriture(self, id):
         return self.repository.get_nuriture_by_id(id)
@@ -130,52 +145,7 @@ class HistoriqueConsommationService:
 
 
 
-    
-# services/chatbot_service.py
 
-# import os
-# from google import genai
-# from google.genai import types
-# from dotenv import load_dotenv
-
-# load_dotenv()
-# # sk-b4eca66ce49345e8af6c381a9ae2fff2 voici ma cle deeepseek et mon fichier service.py
-# class ChatbotService:
-#     def __init__(self):
-#         self.client = genai.Client(
-#             api_key=os.getenv("AIzaSyCOFaTg8zwm52DoFwzqIjjTn5xebiSaHqQ")
-#         )
-#         self.model = "gemini-2.5-pro-preview-05-06"
-
-#     def poser_question(self, question):
-#         contents = [
-#             types.Content(
-#                 role="user",
-#                 parts=[types.Part.from_text(text=question)],
-#             )
-#         ]
-
-#         config = types.GenerateContentConfig(response_mime_type="text/plain")
-
-#         try:
-#             response = ""
-#             for chunk in self.client.models.generate_content_stream(
-#                 model=self.model,
-#                 contents=contents,
-#                 config=config,
-#             ):
-#                 response += chunk.text
-#             return response
-#         except Exception as e:
-#             return f"Erreur : {str(e)}"
-        
-
-
-# service/chatbot_service.py
-
-import os
-import requests
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -216,10 +186,6 @@ class ChatbotService:
         except Exception as e:
             print("Erreur API OpenRouter:", str(e))  # log utile
             return f"Erreur OpenRouter : {str(e)}"
-
-
-
-
 
     # openrouter.comment include une api avec openrouter pour project flask
 

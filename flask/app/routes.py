@@ -70,6 +70,18 @@ def get_consommateur(id):
         abort(404)
     return jsonify(consommateur.to_dict())
 
+@bp.route('/liste_consommateurs', methods=['GET'])
+def get_consommateurs():
+    consommateurs = consommateur_service.get_all_consommateurs()
+    result = [
+        {
+            "id": c.id,
+            "nom": c.nom,
+            "email": c.email
+        } for c in consommateurs
+    ]
+    return jsonify(result), 200
+
 @bp.route('/consommateurs', methods=['POST'])
 def create_consommateur():
     data = request.json
