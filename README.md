@@ -40,7 +40,7 @@ flask/
 ### 1. Cloner le dépôt
 
 ```bash
-git clone https://github.com/Champy237/FOOD_MANAGEMENT.git
+git clone https://github.com/Champy237/food_management.git
 cd flask
 ```
 
