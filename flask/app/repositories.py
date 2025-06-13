@@ -61,6 +61,11 @@ class ConsommateurRepository:
     
     def list_consommateurs(self):
         return Consommateur.query.all()
+    
+
+    def get_by_nom(self, nom: str):
+        return db.session.query(Consommateur).filter_by(nom=nom).first()
+
 
     def get_consommateur_by_id(self, consommateur_id):
         return Consommateur.query.get(consommateur_id)
@@ -113,6 +118,10 @@ class NuritureRepository:
         db.session.commit()
         return nuriture
     
+    def get_by_nom(self, nom: str):
+        return db.session.query(Nuriture).filter_by(nom=nom).first()
+    
+
     def list_nuritures(self):
         return Nuriture.query.all()
  
@@ -159,6 +168,10 @@ class IngredientRepository:
         db.session.commit()
         return ingredient
 
+    def get_by_nom(self, nom):
+        return Ingredient.query.filter_by(nom=nom).first()
+    
+
     def list_ingredients(self):
         return Ingredient.query.all()
 
@@ -188,6 +201,9 @@ class CategorieRepository:
         db.session.add(categorie)
         db.session.commit()
         return categorie
+
+    def get_by_nom(self, nom):
+        return Categorie.query.filter_by(nom=nom).first()
 
     def list_categories(self):
         return Categorie.query.all()
@@ -223,7 +239,7 @@ class NuritureCategorieRepository:
         return Nuriture.query.get(id)
 
     def delete_nuriture_categorie(self, id):
-        # Cette méthode est généralement gérée par la relation many-to-many dans SQLAlchemy
+
         pass
 
 
@@ -233,7 +249,7 @@ class HistoriqueConsommationRepository:
             consommateur_id=data["consommateur_id"],
             nuriture_id=data["nuriture_id"],
             date_consommation=data.get("date_consommation"),
-            a_eu_malaise=data.get("a_eu_malaise", False)  # si tu as ce champ dans ton modèle
+            a_eu_malaise=data.get("a_eu_malaise", False)  #
         )
         db.session.add(historique)
         db.session.commit()

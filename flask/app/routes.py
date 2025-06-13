@@ -58,6 +58,28 @@ def delete_utilisateur(id):
     return '', 204
 
 # --- Routes Consommateur ---
+
+@bp.route('/populate_ingredients', methods=['POST'])
+def populate_ingredients():
+    ingredients_data = [
+        {"nom": "Riz", "description": "Riz basmati parfumé."},
+        {"nom": "Poulet", "description": "Poulet désossé."},
+        {"nom": "Épices", "description": "Mélange d'épices pakistanaises."},
+        {"nom": "Viande hachée", "description": "Bœuf haché."},
+        {"nom": "Pommes de terre", "description": "Pommes de terre fraîches."},
+    ]
+
+    added = []
+    for data in ingredients_data:
+        if not ingredient_service.get_ingredient_by_nom(data['nom']):
+            ingredient = ingredient_service.create_ingredient(data)
+            added.append(ingredient.to_dict())
+
+    return jsonify({
+        "message": f"{len(added)} ingrédients ajoutés.",
+        "ingredients": added
+    }), 201
+
 @bp.route('/consommateurs', methods=['GET'])
 def create_consommateurs():
     consommateurs = consommateur_service.create_consommateur()
@@ -104,6 +126,8 @@ def delete_consommateur(id):
     return '', 204
 
 # --- Routes Nuriture ---
+
+
 @bp.route('/nuritures', methods=['GET'])
 def get_nuritures():
     nuritures = nuriture_service.get_nuritures()
@@ -115,6 +139,21 @@ def get_nuriture(id):
     if not nuriture:
         abort(404)
     return jsonify(nuriture.to_dict())
+
+@bp.route('/liste_nuritures', methods = ['GET'])
+def list_nuritures():
+    nuritures = nuriture_service.liste_nuritures()
+    result = [
+        {
+            "id": c.id,
+            "nom": c.nom,
+            "description": c.description,
+            "type": c.type,
+            "prix": c.prix,
+            "image_url": c.image_url,
+        } for c in nuritures
+    ]
+    return jsonify(result),200
 
 @bp.route('/nuritures', methods=['POST'])
 def create_nuriture():
@@ -144,6 +183,8 @@ def delete_nuriture(id):
 def get_ingredients():
     ingredients = ingredient_service.get_ingredients()
     return jsonify([i.to_dict() for i in ingredients])
+    
+    
 
 @bp.route('/ingredients/<int:id>', methods=['GET'])
 def get_ingredient(id):
@@ -172,6 +213,9 @@ def delete_ingredient(id):
     if not success:
         abort(404)
     return '', 204
+
+
+
 
 # --- Routes Categorie ---
 @bp.route('/categories', methods=['GET'])
@@ -286,14 +330,5 @@ def interroger_chatbot():
 
 
 
-# @bp.route("/chatbot", methods=["POST"])
-# def interroger_chatbot():
-#     data = request.get_json()
-#     question = data.get("question")
 
-#     if not question:
-#         return jsonify({"error": "Le champ 'question' est requis"}), 400
-
-#     reponse = chatbot_service.poser_question(question)
-#     return jsonify({"réponse": reponse})
 

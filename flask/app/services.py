@@ -32,7 +32,6 @@ class UtilisateurService:
     def delete_utilisateur(self, id):
         return self.repository.delete_utilisateur(id)
     
-
 class ConsommateurService:
     def __init__(self):
         self.repository = ConsommateurRepository()
@@ -40,6 +39,9 @@ class ConsommateurService:
     def create_consommateur(self, data):
         return self.repository.create_consommateur(data)
     
+    def get_consommateur_by_nom(self, nom: str):
+        return self.repository.get_by_nom(nom)
+
 
     def get_all_consommateurs(self):
         return self.repository.list_consommateurs()
@@ -63,7 +65,13 @@ class NuritureService:
 
     def create_nuriture(self, data, file=None):
         return self.repository.create_nuriture(data, file=file)
+    
+    def get_nuriture_by_nom(self, nom: str):
+        return self.repository.get_by_nom(nom)
 
+
+    def liste_nuritures(self):
+        return self.repository.list_nuritures()
 
     def get_nuriture(self, id):
         return self.repository.get_nuriture_by_id(id)
@@ -78,9 +86,15 @@ class IngredientService:
     def __init__(self):
         self.repository = IngredientRepository()
 
+    def get_ingredient_by_nom(self, nom):
+        return self.repository.get_by_nom(nom)
+
     def create_ingredient(self, data):
         return self.repository.create_ingredient(data)
+    
 
+    def list_ingredient(self):
+        return self.repository.list_ingredients()
 
     def get_ingredient(self, id):
         return self.repository.get_ingredient_by_id(id)
@@ -95,10 +109,15 @@ class CategorieService:
     def __init__(self):
         from app.repositories import CategorieRepository
         self.repository = CategorieRepository()
+        
+    def get_categorie_by_nom(self, nom):
+        return self.repository.get_by_nom(nom)
 
     def create_categorie(self, data):
         return self.repository.create_categorie(data)
 
+    def liste_categorie(self):
+        return self.repository.list_categories()
 
     def get_categorie(self, id):
         return self.repository.get_categorie_by_id(id)
