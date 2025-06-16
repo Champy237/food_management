@@ -252,7 +252,7 @@ Tous les endpoints sont testables via **Postman**. Assurez-vous que le serveur e
   "description": "Riz parfumé au safran",
   "type": "accompagnement",
   "prix": 7.5,
-  "image_url": "http://url-de-l-image"
+  "image": "http://url-de-l-image"
 }
 ```
 
