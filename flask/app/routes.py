@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, abort
+from datetime import datetime
 
 from app.services import (
     UtilisateurService,
@@ -7,7 +8,7 @@ from app.services import (
     IngredientService,
     CategorieService,
     NuritureCategorieService,
-    HistoriqueConsommationRepository,
+    HistoriqueConsommationService,
     ChatbotService,
 )
 
@@ -19,8 +20,9 @@ nuriture_service = NuritureService()
 ingredient_service = IngredientService()
 categorie_service = CategorieService()
 nuriture_categorie_service = NuritureCategorieService()
-historique_service = HistoriqueConsommationRepository()
+historique_service = HistoriqueConsommationService()
 chatbot_service = ChatbotService()
+
 
 # --- Routes Utilisateur ---
 @bp.route('/utilisateurs', methods=['GET'])
@@ -151,6 +153,7 @@ def list_nuritures():
             "type": c.type,
             "prix": c.prix,
             "image_url": c.image_url,
+            "categories": [cat.to_dict() for cat in c.categories]
         } for c in nuritures
     ]
     return jsonify(result),200
@@ -277,6 +280,31 @@ def remove_nuriture_from_categorie():
     return jsonify({"message": "Nuriture removed from categorie"}), 200
 
 
+
+# Route pour ajouter une catégorie à une nourriture existante
+@bp.route('/nuritures/<int:nuriture_id>/categories/<int:categorie_id>', methods=['POST'])
+def add_categorie(nuriture_id, categorie_id):
+    result = nuriture_categorie_service.add_categorie_to_nuriture(nuriture_id, categorie_id)  # Ajout via le service
+    if isinstance(result, tuple):  # Gestion d'erreur possible
+        return jsonify(result[0]), result[1]
+    return jsonify(result), 200  # Ajout réussi
+
+# Route pour retirer une catégorie d'une nourriture
+@bp.route('/nuritures/<int:nuriture_id>/categories/<int:categorie_id>', methods=['DELETE'])
+def remove_categorie(nuriture_id, categorie_id):
+    result = nuriture_categorie_service.remove_categorie_from_nuriture(nuriture_id, categorie_id)  # Retrait via le service
+    if isinstance(result, tuple):  # Gestion d'erreur possible
+        return jsonify(result[0]), result[1]
+    return jsonify(result), 200  # Retrait réussi
+
+
+
+
+
+
+
+
+
 # --- Routes Historique de Consommation ---
 
 @bp.route("historique/",methods=["POST"])
@@ -288,7 +316,6 @@ def creer_historique():
             "id": historique.id,
             "consommateur_id": historique.consommateur_id,
             "nuriture_id": historique.nuriture_id,
-            "date_consommation": str(historique.date_consommation),
             "a_eu_malaise": historique.a_eu_malaise
         }), 201
     except Exception as e:

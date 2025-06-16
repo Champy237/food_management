@@ -134,20 +134,57 @@ class NuritureCategorieService:
     def __init__(self):
         self.repository = NuritureCategorieRepository()
 
-    def create_nuriture_categorie(self, data):
-        return self.repository.create_nuriture_categorie(data)
+    def create_nuriture_categorie(self, nuriture_id, categorie_ids):
+        """
+        Crée une liaison entre une nourriture et plusieurs catégories.
+        """
+        result = self.repository.create_nuriture_categorie(nuriture_id, categorie_ids)
+        if result is None:
+            return {"error": "Nuriture or categories not found"}, 404
+        return result.to_dict()
 
-    def get_nuriture_categories(self):
-        return self.repository.get_nuriture_categories()
+    def get_all_nuriture_categories(self):
+        """
+        Récupère toutes les nourritures avec leurs catégories.
+        """
+        nouritures = self.repository.get_nuriture_categories()
+        return [n.to_dict() for n in nouritures]
 
-    def get_nuriture_categorie(self, id):
-        return self.repository.get_nuriture_categorie(id)
+    def get_nuriture_categorie(self, nuriture_id):
+        """
+        Récupère une nourriture avec ses catégories par son ID.
+        """
+        nuriture = self.repository.get_nuriture_categorie(nuriture_id)
+        if not nuriture:
+            return {"error": "Nuriture not found"}, 404
+        return nuriture.to_dict()
 
-    def update_nuriture_categorie(self, id, data):
-        return self.repository.update_nuriture_categorie(id, data)
+    def delete_nuriture_categorie(self, nuriture_id):
+        """
+        Supprime une nourriture.
+        """
+        success = self.repository.delete_nuriture_categorie(nuriture_id)
+        if not success:
+            return {"error": "Nuriture not found"}, 404
+        return {"message": "Nuriture deleted successfully"}
 
-    def delete_nuriture_categorie(self, id):
-        return self.repository.delete_nuriture_categorie(id)
+    def add_categorie_to_nuriture(self, nuriture_id, categorie_id):
+        """
+        Ajoute une catégorie à une nourriture.
+        """
+        success = self.repository.add_categorie_to_nuriture(nuriture_id, categorie_id)
+        if not success:
+            return {"error": "Nuriture or Categorie not found"}, 404
+        return {"message": "Categorie added to Nuriture successfully"}
+
+    def remove_categorie_from_nuriture(self, nuriture_id, categorie_id):
+        """
+        Enlève une catégorie d'une nourriture.
+        """
+        success = self.repository.remove_categorie_from_nuriture(nuriture_id, categorie_id)
+        if not success:
+            return {"error": "Nuriture or Categorie not found"}, 404
+        return {"message": "Categorie removed from Nuriture successfully"}
 
 
 

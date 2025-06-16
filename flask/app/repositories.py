@@ -2,7 +2,7 @@ from app import db
 from app.models import Consommateur, Nuriture, Ingredient, Categorie,HistoriqueConsommation
 from sqlalchemy import func
 from werkzeug.utils import secure_filename
-UPLOAD_FOLDER = "app/static/uploads"
+UPLOAD_FOLDER = "app/static/images"
 from flask import url_for, current_app
 import os
 
@@ -97,7 +97,7 @@ class NuritureRepository:
             os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Crée le dossier s'il n'existe pas
             filepath = os.path.join(UPLOAD_FOLDER, filename)
             file.save(filepath)
-            image_url = f"/static/uploads/{filename}"
+            image_url = f"/static/images/{filename}"
 
         nuriture = Nuriture(
             nom=data["nom"],
@@ -228,19 +228,80 @@ class CategorieRepository:
 
 
 class NuritureCategorieRepository:
-    def create_nuriture_categorie(self, data):
+    
+    def create_nuriture_categorie(self, nuriture_id, categorie_ids):
+        """
+        Lie une Nuriture à plusieurs catégories.
+        nuriture_id : int
+        categorie_ids : list d'entiers
+        """
+        nuriture = Nuriture.query.get(nuriture_id)
+        if not nuriture:
+            return None  # ou lever une erreur
+
+        # Récupère les catégories demandées
+        categories = Categorie.query.filter(Categorie.id.in_(categorie_ids)).all()
+        if not categories:
+            return None  # ou lever une erreur
         
-        pass
+        # Associe les catégories à la nourriture
+        nuriture.categories = categories
+        
+        db.session.commit()
+        return nuriture
 
     def get_nuriture_categories(self):
+        """
+        Retourne toutes les nourritures avec leurs catégories.
+        """
         return Nuriture.query.all()
 
     def get_nuriture_categorie(self, id):
+        """
+        Retourne une nourriture par son id avec ses catégories.
+        """
         return Nuriture.query.get(id)
 
-    def delete_nuriture_categorie(self, id):
+    def delete_nuriture_categorie(self, nuriture_id):
+        """
+        Supprime une nourriture (et ses liens catégories par cascade).
+        """
+        nuriture = Nuriture.query.get(nuriture_id)
+        if not nuriture:
+            return False
+        
+        db.session.delete(nuriture)
+        db.session.commit()
+        return True
 
-        pass
+    def add_categorie_to_nuriture(self, nuriture_id, categorie_id):
+        """
+        Ajoute une catégorie à une nourriture existante.
+        """
+        nuriture = Nuriture.query.get(nuriture_id)
+        categorie = Categorie.query.get(categorie_id)
+        if not nuriture or not categorie:
+            return False
+        
+        if categorie not in nuriture.categories:
+            nuriture.categories.append(categorie)
+            db.session.commit()
+        return True
+
+    def remove_categorie_from_nuriture(self, nuriture_id, categorie_id):
+        """
+        Enlève une catégorie d'une nourriture.
+        """
+        nuriture = Nuriture.query.get(nuriture_id)
+        categorie = Categorie.query.get(categorie_id)
+        if not nuriture or not categorie:
+            return False
+        
+        if categorie in nuriture.categories:
+            nuriture.categories.remove(categorie)
+            db.session.commit()
+        return True
+
 
 
 class HistoriqueConsommationRepository:
@@ -248,7 +309,6 @@ class HistoriqueConsommationRepository:
         historique = HistoriqueConsommation(
             consommateur_id=data["consommateur_id"],
             nuriture_id=data["nuriture_id"],
-            date_consommation=data.get("date_consommation"),
             a_eu_malaise=data.get("a_eu_malaise", False)  #
         )
         db.session.add(historique)
