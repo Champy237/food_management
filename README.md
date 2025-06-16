@@ -1,14 +1,14 @@
 # Nutrition Manager API
 
-Une API RESTful développée avec **Flask** pour gérer des données nutritionnelles : consommateurs, ingrédients, aliments, catégories, allergies,historiques de consommation et la gestion des chartbot dans domain de la nutrition. Le projet vise des applications comme la **gestion de plans alimentaires**, **buffets**, ou **suivi nutritionnel intelligent**.
+Une API RESTful développée avec **Flask** pour gérer des données nutritionnelles : consommateurs, ingrédients, aliments, catégories, allergies, historiques de consommation et la gestion des chatbot dans le domaine de la nutrition. Le projet vise des applications comme la **gestion de plans alimentaires**, **buffets**, ou **suivi nutritionnel intelligent**.
 
 ## Fonctionnalités
 
 * Authentification et gestion des utilisateurs
 * Gestion des consommateurs
-* Gestion des aliments, ingrédients, catégories, allergies et chaetbot
+* Gestion des aliments, ingrédients, catégories, allergies et chatbot
 * Historique de consommation
-* Gestion du chartbot
+* Gestion du chatbot
 * Architecture (Model - Repository - Service - Route)
 * Dockerisé pour un déploiement rapide
 
@@ -17,8 +17,8 @@ Une API RESTful développée avec **Flask** pour gérer des données nutritionne
 ```
 flask/
 |── app/
-    |── static/           # fichier static des images
-        |── uploads/      # stocker les images 
+    |── static/           # fichiers statiques des images
+        |── uploads/      # stockage des images 
     |── models.py         # Modèles SQLAlchemy (Utilisateur, Nourriture, etc.)
     |── repositories.py   # Opérations CRUD bas niveau
     |── services.py       # Logique métier
@@ -27,10 +27,8 @@ flask/
 |── config.py             # Configuration (base de données, .env)
 |── docker-compose.yml
 |── Dockerfile            
-|── .env                  # configuration des cle api
-|── .venv/                # environement virtuel
-
-
+|── .env                  # configuration des clefs API
+|── .venv/                # environnement virtuel
 ```
 
 ---
@@ -74,96 +72,287 @@ docker compose up --build
 
 ---
 
-##  Lancer avec Docker
+## Lancer avec Docker
 
 ```bash
 docker compose up --build
 ```
+
 ---
 
 ## Test de l'API avec Postman
 
 Tous les endpoints sont testables via **Postman**. Assurez-vous que le serveur est bien démarré à l'adresse :  
-📍 `http://localhost:5000/`
+`http://localhost:5000/`
 
-###  Utilisateur
+---
 
-| Méthode| Endpoint                | Description                      |
-|--------|-------------------------|----------------------------------|
-| POST   | `api/users/register`    | Enregistrer un utilisateur       |
-| POST   | `api/users/login`       | Connexion utilisateur            |
-| GET    | `api/users/`            | Lister les utilisateurs          |
+## Routes pour les `Utilisateurs`
 
-###  Consommateur
+### Mettre à jour un utilisateur
 
-| Méthode| Endpoint                      | Description                      |
-|--------|-------------------------------|----------------------------------|
-| GET    | `api/consommateurs/`          | Lister les consommateurs         |
-| POST   | `api/consommateurs/`          | Ajouter un consommateur          |
-| GET    | `api/consommateurs/<id>`      | Voir un consommateur             |
-| PUT    | `api/consommateurs/<id>`      | Mettre à jour un consommateur    |
-| DELETE | `api/consommateurs/<id>`      | Supprimer un consommateur        |
+- **Méthode**: PUT  
+- **URL**: `http://127.0.0.1:5000/api/utilisateurs/1`
+- **Headers**:
+  - `Content-Type: application/json`
+- **Body (JSON)**:
+```json
+{
+  "nom": "NouveauNom",
+  "email": "nouveau@email.com"
+}
+```
+- **Réponse attendue**:
+```json
+{
+  "id": 1,
+  "nom": "NouveauNom",
+  "email": "nouveau@email.com"
+}
+```
 
+---
 
+### Supprimer un utilisateur
 
-###  Nourriture
+- **Méthode**: DELETE  
+- **URL**: `http://127.0.0.1:5000/api/utilisateurs/1`
+- **Réponse attendue**: Code HTTP `204 No Content`
 
-| Méthode | Endpoint                | Description                      |
-|--------|--------------------------|----------------------------------|
-| GET    | `api/liste_nuritures/`   | Lister les nourritures           |
-| POST   | `api/nourritures/`       | Ajouter une nourriture           |
-| GET    | `api/nourritures/<id>`   | Voir une nourriture              |
-| PUT    | `api/nourritures/<id>`   | Modifier une nourriture          |
-| DELETE | `api/nourritures/<id>`   | Supprimer une nourriture         |
+---
 
-###  Ingrédients
+## Routes pour les `Consommateurs`
 
-| Méthode| Endpoint                 | Description                      |
-|--------|--------------------------|----------------------------------|
-| GET    | `api/liste_ingredients/` | Lister les ingrédients           |
-| POST   | `api/ingredients/`       | Ajouter un ingrédient            |
-| GET    | `api/ingredients/<id>`   | Voir un ingrédient               |
-| PUT    | `api/ingredients/<id>`   | Modifier un ingrédient           |
-| DELETE | `api/ingredients/<id>`   | Supprimer un ingrédient          |
+### Ajouter des ingrédients prédéfinis
 
-###  Catégories
+- **Méthode**: POST  
+- **URL**: `http://127.0.0.1:5000/api/populate_ingredients`
+- **Réponse attendue**:
+```json
+{
+  "message": "5 ingrédients ajoutés.",
+  "ingredients": [...]
+}
+```
 
-| Méthode| Endpoint                 | Description                      |
-|--------|--------------------------|----------------------------------|
-| GET    | `api/liste_categories/`  | Lister les catégories            |
-| POST   | `api/categories/`        | Ajouter une catégorie            |
-| GET    | `api/categories/<id>`    | Voir une catégorie               |
-| PUT    | `api/categories/<id>`    | Modifier une catégorie           |
-| DELETE | `api/categories/<id>`    | Supprimer une catégorie          |
+---
 
-###  Allergies
+### 👤 Créer un consommateur
 
-| Méthode| Endpoint                 | Description                      |
-|--------|--------------------------|----------------------------------|
-| GET    | `api/liste_alergies/`    | Lister les allergies             |
-| POST   | `api/alergies/`          | Ajouter une allergie             |
-| GET    | `api/alergies/<id>`      | Voir une allergie                |
-| PUT    | `api/alergies/<id>`      | Modifier une allergie            |
-| DELETE | `api/alergies/<id>`      | Supprimer une allergie           |
+- **Méthode**: POST  
+- **URL**: `http://127.0.0.1:5000/api/consommateurs`
+- **Headers**:
+  - `Content-Type: application/json`
+- **Body**:
+```json
+{
+  "nom": "Jean Dupont",
+  "email": "jean@example.com"
+}
+```
+- **Réponse attendue**: Le consommateur créé avec son `id`
 
-###  Historique de consommation
+---
 
-| Méthode | Endpoint                | Description                            |
-|--------|--------------------------|----------------------------------------|
-| GET    | `api/liste_historiques/` | Lister les historiques                 |
-| POST   | `api/historiques/`       | Enregistrer une consommation           |
-| GET    | `api/historiques/<id>`   | Détails d’un historique                |
-| DELETE | `api/historiques/<id>`   | Supprimer un historique                |
+### Lister tous les consommateurs
 
+- **Méthode**: GET  
+- **URL**: `http://127.0.0.1:5000/api/liste_consommateurs`
+- **Réponse attendue**:
+```json
+[
+  {
+    "id": 1,
+    "nom": "Jean Dupont",
+    "email": "jean@example.com"
+  },
+  ...
+]
+```
 
-### Chart bot 
-| Méthode | Endpoint                | Description                            |
-|--------|--------------------------|----------------------------------------|
-| GET    | `api/chartbot/`          | discusion avec un chartbot             |
+---
 
+### Obtenir un consommateur par ID
 
+- **Méthode**: GET  
+- **URL**: `http://127.0.0.1:5000/api/consommateurs/1`
 
+---
 
+### 🛠️ Modifier un consommateur
+
+- **Méthode**: PUT  
+- **URL**: `http://127.0.0.1:5000/api/consommateurs/1`
+- **Headers**:
+  - `Content-Type: application/json`
+- **Body**:
+```json
+{
+  "nom": "Jean Modifié",
+  "email": "modifie@example.com"
+}
+```
+
+---
+
+### 🗑️ Supprimer un consommateur
+
+- **Méthode**: DELETE  
+- **URL**: `http://127.0.0.1:5000/api/consommateurs/1`
+- **Réponse attendue**: Code HTTP `204 No Content`
+
+---
+
+##  Nourritures
+
+### Récupérer toutes les nourritures
+
+- **Méthode**: GET  
+- **URL**: `http://localhost:5000/nuritures`
+
+---
+
+### Récupérer une nourriture par ID
+
+- **Méthode**: GET  
+- **URL**: `http://localhost:5000/nuritures/1`
+
+---
+
+### Récupérer nourritures avec catégories
+
+- **Méthode**: GET  
+- **URL**: `http://localhost:5000/liste_nuritures`
+
+---
+
+### Créer une nouvelle nourriture (avec image)
+
+- **Méthode**: POST  
+- **URL**: `http://localhost:5000/nuritures`  
+- **Type**: form-data  
+- **Params**:
+  - `nom`: Riz au poulet
+  - `description`: Plat pakistanais traditionnel
+  - `type`: plat principal
+  - `prix`: 12.5
+  - `image`: fichier image (type file)
+
+---
+
+### Modifier une nourriture
+
+- **Méthode**: PUT  
+- **URL**: `http://localhost:5000/nuritures/1`  
+- **Type**: JSON  
+- **Body**:
+```json
+{
+  "nom": "Riz basmati",
+  "description": "Riz parfumé au safran",
+  "type": "accompagnement",
+  "prix": 7.5,
+  "image_url": "http://url-de-l-image"
+}
+```
+
+---
+
+### Supprimer une nourriture
+
+- **Méthode**: DELETE  
+- **URL**: `http://localhost:5000/nuritures/1`
+
+---
+
+## Ingrédients
+
+- GET `/ingredients` : Liste tous les ingrédients.
+- GET `/ingredients/<id>` : Détail d’un ingrédient.
+- POST `/ingredients` : Créer un ingrédient (JSON).
+- PUT `/ingredients/<id>` : Modifier un ingrédient (JSON).
+- DELETE `/ingredients/<id>` : Supprimer un ingrédient.
+
+---
+
+##  Catégories
+
+- GET `/categories` : Liste des catégories.
+- GET `/categories/<id>` : Détail d'une catégorie.
+- POST `/categories` : Créer une catégorie (JSON).
+- PUT `/categories/<id>` : Modifier une catégorie (JSON).
+- DELETE `/categories/<id>` : Supprimer une catégorie.
+
+---
+
+## 🔗 Association Nourriture ↔Catégorie
+
+- POST `/nuriture_categorie` : Associer une nourriture à une catégorie (JSON).
+- DELETE `/nuriture_categorie` : Supprimer une association (JSON).
+- POST `/nuritures/<nuriture_id>/categories/<categorie_id>` : Même fonction, plus RESTful.
+- DELETE `/nuritures/<nuriture_id>/categories/<categorie_id>` : Supprimer la catégorie via URL.
+
+---
+
+##  Historique de consommation
+
+### Créer un historique
+
+- **Méthode**: POST  
+- **URL**: `http://localhost:5000/historique/`  
+- **Body (JSON)**:
+```json
+{
+  "consommateur_id": 1,
+  "nuriture_id": 3,
+  "a_eu_malaise": true
+}
+```
+- **Réponse**:
+```json
+{
+  "id": 10,
+  "consommateur_id": 1,
+  "nuriture_id": 3,
+  "a_eu_malaise": true
+}
+```
+
+---
+
+### Vérification d’allergie
+
+- **Méthode**: GET  
+- **URL**: `http://localhost:5000/historique/allergie?consommateur_id=1&nuriture_id=3`
+- **Réponse**:
+```json
+{
+  "allergie_probable": true
+}
+```
+
+---
+
+##  Chatbot
+
+### Poser une question
+
+- **Méthode**: POST  
+- **URL**: `http://localhost:5000/chatbot`  
+- **Body (JSON)**:
+```json
+{
+  "question": "Quels sont les ingrédients du couscous ?"
+}
+```
+- **Réponse**:
+```json
+{
+  "réponse": "Le couscous contient généralement de la semoule, des légumes, et de la viande."
+}
+```
+
+---
 
 ## Exemple de requête (Postman)
 
@@ -181,13 +370,13 @@ Content-Type: application/json
 
 ---
 
-## 🧪 Tests
+##  Tests
 
 Les tests se font via **Postman**. Une collection peut être ajoutée dans `/postman/` si besoin.
 
 ---
 
-## 📦 Technologies utilisées
+##  Technologies utilisées
 
 * Python 3.12
 * Flask
@@ -195,7 +384,7 @@ Les tests se font via **Postman**. Une collection peut être ajoutée dans `/pos
 * PostgreSQL
 * Docker / Docker Compose
 * psycopg2
-* requestes
+* requests
 
 ---
 
